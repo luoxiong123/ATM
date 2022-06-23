@@ -1,0 +1,324 @@
+
+#include<stdio.h>
+#include<stdlib.h>
+
+display();
+void Init();
+ login();
+Out();
+Query();
+void GX();
+  Changepwd();
+  Transfer();
+tc();
+quit();
+
+	struct date 
+	{  char yhp[20];
+	    int ID;
+		int mm;
+		float ye;
+	}st[6];
+
+//系统初始化，显示用户信息
+void Init()
+{
+	system("color 0b");
+	FILE *fp;
+	int i;
+    if((fp=fopen("C:\\Users\\小张\\Desktop\\user.txt","r"))==NULL)
+	{  
+		printf("cannot open this file");
+	}
+	fp=fopen("C:\\Users\\小张\\Desktop\\user.txt","r");
+
+	for(i=0;i<6;i++)
+		fscanf(fp,"%s %d %d %f",&st[i].yhp,&st[i].ID,&st[i].mm,&st[i].ye);
+	printf("本银行信息如下——");
+		printf("用户名 ID 密码 余额\n");
+		for(i=0;i<6;i++)
+			printf("%s\t %d\t %d\t %.2f\n",st[i].yhp,st[i].ID,st[i].mm,st[i].ye);
+		printf("\n\n");
+}
+
+ //欢迎界面，提示输入账号和密码
+void welcome()
+{
+	printf("*********************************\n");
+	printf("*     欢迎使用ATM自助取款机       *");
+	printf("\n*        请输入账号和密码       *\n");
+	printf("***********************************\n");
+}
+
+//用户登录，只能输入三次
+int pos;
+	login()
+{
+	
+	int id,p,t,i;
+	printf("\n\n请输入账号和密码:\n");
+	scanf("%d%d",&id,&p);
+	t=1;
+	while(t<=3)
+	{
+		for(i=0;i<6;i++)
+		{
+			if(id==st[i].ID&&p==st[i].mm)
+			{	pos=i;
+			  break;
+			}
+		}
+		if(pos==i)
+		{
+		 printf("登录成功!\n");
+		 system("pause");
+	   	 system("cls");
+			break;
+
+		}
+		if(t==3)
+		{
+				printf("今日次数已达上限，请明日再试!\n");
+				break;
+		}
+			t++;
+			printf("账号或密码错误，请重新输入:");
+			scanf("%d%d",&id,&p);
+	}
+	return t;
+	printf("\n\n");
+}
+
+
+//取款
+  Out()
+  { 
+	  int i;
+	 float j;
+	 FILE *fp;
+	fp=fopen("C:\\Users\\小张\\Desktop\\user.txt","w");
+    printf("余额:%f\n",st[pos].ye);
+	printf("请输入取款的金额\n");
+    scanf("%f",&j);
+	if(j<st[pos].ye&&j>0)
+	{
+		st[pos].ye=st[pos].ye-j;
+	   printf("余额:%f",st[pos].ye);
+	 }
+	else 
+		printf("余额不足");
+
+	for(i=0;i<6;i++)
+		fprintf(fp,"%s %d %d %f",st[i].yhp,st[i].ID,st[i].mm,st[i].ye);
+	display();
+  }
+
+
+  //查看余额
+   Query()
+  {
+	  printf("\n\n");
+	  printf("RICH RICH RICH RICH RICH \n");
+	  printf("余额为:%f\n",st[pos].ye);
+	  printf("RICH RICH RICH RICH RICH\n ");
+	  	display();
+
+  }
+
+
+   //修改密码
+  Changepwd()
+  {   
+	  printf("\n\n");
+	  int x,i,y,z,p;
+	  p=1;
+	  while(p<=3)
+	  {
+	  printf("请输入原密码:");
+	  scanf("%d",&y);
+	  if(st[pos].mm==y)
+	  {
+	    printf("请输入要修改的数字密码:");
+	    scanf("%d",&x);
+		printf("请确定输入的密码:");
+		scanf("%d",&z);
+		 if(x==z)
+		{
+		  st[pos].mm=x;
+		  printf("密码修改成功!\n");
+		  break;
+		}
+		 else 
+			printf("两次密码不一致!\n");
+	  }
+	  else 
+		{
+		  printf("原密码有误!");
+	      p++;
+		}
+	  }
+	 
+	  if(p==4)
+	  {printf("\n返回到主菜单\n");
+	  printf("\n");}
+	  printf("\n返回到主菜单\n");
+       display();
+	  return 0;
+  }
+
+//退出功能
+  int tc()
+  {
+	  printf("\n\n");
+  printf("退出系统———1\n返回主菜单———2\n");
+  int a;
+  scanf("%d",&a);
+  if(a==1)
+	 {
+	quit();
+	}
+  else
+	{
+	display();
+	}
+
+  }
+
+  //退出系统
+  int quit()
+  {
+	printf("尊贵的用户，系统正在为您退出！\n");
+	welcome();
+	login();
+  }
+
+ //显示服务内容
+  display()
+ {
+	 int x;
+	 	printf("\n\n");
+     printf("**1.取款\n");
+	 printf("**2.查询余额\n"); 
+	 printf("**3.修改密码\n");
+	 printf("**4.转账\n");
+	 printf("**5.退出\n");
+	 printf("**请输入你想要的服务的序号:\n");
+	 scanf("%d",&x);
+	 if(x==1)
+	 {
+		 Out();
+	 GX();
+	 }
+	 if(x==2)
+	 {
+		 Query();
+		 GX();
+	 }
+	 if(x==3)
+	 {
+		 Changepwd();
+	     GX();
+	 }
+	 if(x==4)
+	 {
+	 Transfer();
+	 GX();
+
+	 }
+	 if(x==5)
+	 tc();
+  
+ }
+
+ //更新文件里面的内容
+ void GX()
+ {
+	int i;
+	FILE *fp;
+	  fp=fopen("C:\\Users\\小张\\Desktop\\user.txt","w");
+
+	  for(i=0;i<6;i++)
+		  fprintf(fp,"%s %d %d %f\n",st[i].yhp,st[i].ID,st[i].mm,st[i].ye);
+ }
+
+ //转账
+ Transfer()
+ {
+		printf("\n\n");
+		FILE *fp;
+    if((fp=fopen("C:\\Users\\小张\\Desktop\\user.txt","r"))==NULL)
+	{  
+		printf("cannot open this file");
+	}
+	fp=fopen("C:\\Users\\小张\\Desktop\\user.txt","r");
+
+	int a,i=0;
+	printf("请输入对方账号:");
+	scanf("%d",&a);
+	int x=1;
+	while(x!=3)
+	{
+	if(a==st[pos].ID)
+	{printf("不许自己给自己转账！！\n请重新输入\n");
+
+	printf("请输入对方账号:");
+	scanf("%d",&a);}
+	else 
+		break;
+	x++;
+	}
+	if(x>3) {printf("输入次数超过3次！将为您退出页面！\n");
+	display();
+	}
+
+	while(i<6)
+	{
+		if(a==st[i].ID)
+			break;
+		i++;
+	}
+	if(i==6)
+	{
+	printf("我们这边没有找到您想要转账的账号呢，请你重新输入！\n ");
+	Transfer();
+	}
+
+	int m;
+	printf("您当前的余额为%.2f\n",st[pos].ye);
+	printf("请输入您想转账的金额:");
+	scanf("%d",&m);
+	while(1)
+{
+	if(m>0&&m<=st[pos].ye)
+	{
+	printf("转账成功！");
+	st[pos].ye-=m;
+	st[i].ye+=m;
+	printf("您当前的余额为%.2f\n",st[pos].ye);
+	break;
+	}
+		else
+		{
+			if(m<=0) printf("金额不能小于等于零！！请重新输入！\n");
+			else printf("余额不足！！请重新输入！\n");
+				printf("请输入您想转账的金额:");
+				scanf("%d",&m);					
+		}
+}
+		display();
+
+ }
+
+
+ void main()
+ {
+	 int i;
+    Init();
+    welcome();
+    i=login();
+	if(i<3)
+	{
+	display();
+	}
+
+ }
